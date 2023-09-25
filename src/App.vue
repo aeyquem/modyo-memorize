@@ -16,6 +16,12 @@
       <ScoreInfo :score="score" />
     </section>
   </main>
+  <input type="button" @click.prevent="modalVisible = true" value="Add name" />
+  <Teleport to="#modal">
+    <dialog class="modal__container" v-if="modalVisible">
+      <UserInputModal @playerNamed="modalVisible = false" />
+    </dialog>
+  </Teleport>
 </template>
 
 <script setup>
@@ -23,6 +29,9 @@ import { onMounted, ref } from 'vue';
 import Card from './components/Card/Card.vue';
 import PlayerInfo from './components/PlayerInfo/PlayerInfo.vue';
 import ScoreInfo from './components/ScoreInfo/ScoreInfo.vue';
+import UserInputModal from './components/UserInputModal/UserInputModal.vue';
+
+const modalVisible = ref(false);
 
 const cards = ref([]);
 const wonCards = ref(new Set());
@@ -142,5 +151,19 @@ main {
   align-items: center;
   min-height: 100vh;
   justify-content: space-between;
+  position: relative;
+}
+.modal__container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+
+  background-color: rgba(0, 0, 0, 0.5);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
