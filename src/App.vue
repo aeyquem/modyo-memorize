@@ -4,7 +4,13 @@
       <PlayerInfo />
     </section>
     <section class="flex justify-center flex-wrap gap-4 p-6">
-      <Card v-for="card in cards" :key="card.id" :card="card" @flipped="hanldeFlipped" />
+      <Card
+        v-for="card in cards"
+        :key="card.id"
+        :isFlipped="card.isFlipped"
+        :card="card"
+        @click.prevent="handleCardClicked(card)"
+      />
     </section>
     <section>
       <ScoreInfo :score="score" />
@@ -22,12 +28,14 @@ const cards = ref([]);
 const wonCards = ref(new Set());
 const flipped = ref({
   slug: null,
-  resetCard: () => {},
+  id: null,
+  isFlipped: null,
 });
 const score = ref({
   right: 0,
   wrong: 0,
 });
+const canClick = ref(true);
 
 onMounted(async () => {
   console.log('onMounted');
@@ -50,9 +58,10 @@ onMounted(async () => {
       //duplicate cards
       const duplicatedCards = cleanCards.flatMap((card) => [card, { ...card }]);
 
-      //insert card id
+      //insert card id and state
       for (let i = 0; i < duplicatedCards.length; i++) {
         duplicatedCards[i].id = i;
+        duplicatedCards[i].isFlipped = false;
       }
 
       //randomize cards
@@ -62,54 +71,67 @@ onMounted(async () => {
       }
 
       cards.value = duplicatedCards;
-      //
     } catch (e) {
       console.log(e);
     }
   }
 });
 
-function hanldeFlipped(data) {
-  //if we click on a "won" card we do nothing
-  if (wonCards.value.has(data.card.slug)) {
+function handleCardClicked(card) {
+  //verify we can click a card
+  if (wonCards.value.has(card.slug)) {
     return;
   }
 
-  //check if there are no flipped cards
+  if (!canClick.value) {
+    return;
+  }
+  //prevent user from clicking again while we are checking the cards
+  canClick.value = false;
+
+  //flip the card
+  card.isFlipped = true;
+  //can, check if we have a flipped card
   if (flipped.value.slug === null) {
     console.log('adding data');
-    flipped.value = {
-      slug: data.card.slug,
-      resetCard: data.resetCard,
-    };
+    flipped.value = card;
+    console.log(flipped.value);
+    canClick.value = true;
     return;
   }
 
-  //check if the flipped card is the same as the one flipped before
-  if (flipped.value.slug !== data.card.slug) {
-    score.value.wrong++;
-    setTimeout(() => {
-      flipped.value.resetCard();
-      data.resetCard();
-      flipped.value = {
-        slug: null,
-        resetCard: () => {},
-      };
-    }, 500);
-    console.log('different cards');
-  } else {
-    score.value.right++;
-    wonCards.value.add(data.card.slug);
-    flipped.value = {
-      slug: null,
-      resetCard: () => {},
-    };
-    console.log('same cards');
+  //check if we are not clickikg the same card twice
+  if (flipped.value.id === card.id) {
+    canClick.value = true;
+    return;
   }
 
-  //check if the game ended with that card
-  if (wonCards.value.size >= cards.value.length / 2) {
-    console.log('game ended');
+  //if we have a flipped card, check if the card is the same as the one flipped before
+  if (flipped.value.slug === card.slug) {
+    console.log('same card');
+    wonCards.value.add(card.slug);
+    flipped.value = {
+      slug: null,
+      id: null,
+      isFlipped: false,
+    };
+    score.value.right++;
+    canClick.value = true;
+  }
+  //if not, reset the flipped card and the card we clicked
+  else {
+    console.log('wrong card');
+    score.value.wrong++;
+    setTimeout(() => {
+      card.isFlipped = false;
+      flipped.value.isFlipped = false;
+      flipped.value = {
+        slug: null,
+        id: null,
+        isFlipped: null,
+      };
+      canClick.value = true;
+    }, 500);
   }
 }
 </script>

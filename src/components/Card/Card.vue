@@ -1,31 +1,19 @@
 <template>
-  <figure @click.prevent="flipCard(card)">
+  <!-- <figure @click.prevent="flipCard(card)"> -->
+  <figure>
     <img v-if="isFlipped" :src="card.src" :alt="card.slug" :title="card.slug" />
     <img v-else class="card__background" />
   </figure>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-const isFlipped = ref(false);
-
-const emit = defineEmits(['flipped']);
-
 defineProps({
   card: {
     src: String,
     slug: String,
   },
+  isFlipped: Boolean,
 });
-
-function resetCard() {
-  isFlipped.value = false;
-}
-
-function flipCard(card) {
-  isFlipped.value = !isFlipped.value;
-  emit('flipped', { card, resetCard });
-}
 </script>
 
 <style>
