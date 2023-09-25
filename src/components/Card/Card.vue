@@ -28,10 +28,36 @@ function flipCard(card) {
 }
 </script>
 
-<style scoped>
+<style>
 img {
   width: 100px;
   height: 150px;
   object-fit: cover;
+  border-radius: 3px;
+  padding: 2px;
+}
+
+.card__background {
+  background: repeating-radial-gradient(
+      circle,
+      transparent,
+      transparent 17.5px,
+      #000000 17.5px,
+      #000000 22.5px
+    ),
+    repeating-radial-gradient(
+      circle,
+      transparent,
+      transparent 17.5px,
+      #000000 17.5px,
+      #000000 22.5px
+    ),
+    #000f78;
+  background-size: 100px 100px;
+  background-position:
+    0 0,
+    50px 50px,
+    100px 50px;
+  background-color: #000f78;
 }
 </style>

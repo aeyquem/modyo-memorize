@@ -8,27 +8,3 @@ body {
       calc(14px / 2) / 14px 14px,
     conic-gradient(from 135deg at 50% 0, #2c7c30 90deg, #277827 0) 0 0 / calc(2 * 14px) 14px;
 }
-
-.card__background {
-  background: repeating-radial-gradient(
-      circle,
-      transparent,
-      transparent 17.5px,
-      #000000 17.5px,
-      #000000 22.5px
-    ),
-    repeating-radial-gradient(
-      circle,
-      transparent,
-      transparent 17.5px,
-      #000000 17.5px,
-      #000000 22.5px
-    ),
-    #000f78;
-  background-size: 100px 100px;
-  background-position:
-    0 0,
-    50px 50px,
-    100px 50px;
-  background-color: #000f78;
-}
