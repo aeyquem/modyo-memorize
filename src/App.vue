@@ -16,12 +16,9 @@
       <ScoreInfo :score="score" />
     </section>
   </main>
-  <input type="button" @click.prevent="modalVisible = true" value="Add name" />
-  <Teleport to="#modal">
-    <dialog class="modal__container" v-if="modalVisible">
-      <UserInputModal @playerNamed="modalVisible = false" />
-    </dialog>
-  </Teleport>
+  <Modal :visible="modalVisible">
+    <UserInputModal @playerNamed="checkPlayerName" />
+  </Modal>
 </template>
 
 <script setup>
@@ -30,6 +27,10 @@ import Card from './components/Card/Card.vue';
 import PlayerInfo from './components/PlayerInfo/PlayerInfo.vue';
 import ScoreInfo from './components/ScoreInfo/ScoreInfo.vue';
 import UserInputModal from './components/UserInputModal/UserInputModal.vue';
+import Modal from '@/components/Modal/Modal.vue';
+import { usePlayerStore } from '@/stores/player.store.js';
+
+const player = usePlayerStore();
 
 const modalVisible = ref(false);
 
@@ -85,6 +86,14 @@ onMounted(async () => {
     }
   }
 });
+
+function checkPlayerName() {
+  if (player.playerName) {
+    modalVisible.value = false;
+  } else {
+    modalVisible.value = true;
+  }
+}
 
 function handleCardClicked(card) {
   //verify we can click a card
@@ -143,6 +152,8 @@ function handleCardClicked(card) {
     }, 500);
   }
 }
+
+checkPlayerName();
 </script>
 <style scoped>
 main {
@@ -152,18 +163,5 @@ main {
   min-height: 100vh;
   justify-content: space-between;
   position: relative;
-}
-.modal__container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-
-  background-color: rgba(0, 0, 0, 0.5);
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 </style>
