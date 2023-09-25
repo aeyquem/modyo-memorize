@@ -1,13 +1,24 @@
 <template>
-  <section class="flex justify-center flex-wrap gap-4 max-w-md">
-    <Card v-for="card in cards" :key="card.id" :card="card" @flipped="hanldeFlipped" />
-  </section>
+  <main class="">
+    <section>
+      <PlayerInfo />
+    </section>
+    <section class="flex justify-center flex-wrap gap-4 p-6">
+      <Card v-for="card in cards" :key="card.id" :card="card" @flipped="hanldeFlipped" />
+    </section>
+    <section>
+      <ScoreInfo :score="score" />
+    </section>
+  </main>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import Card from './components/Card/Card.vue';
+import PlayerInfo from './components/PlayerInfo/PlayerInfo.vue';
+import ScoreInfo from './components/ScoreInfo/ScoreInfo.vue';
 
+const cards = ref([]);
 const wonCards = ref(new Set());
 const flipped = ref({
   slug: null,
@@ -18,38 +29,45 @@ const score = ref({
   wrong: 0,
 });
 
-let cards = [
-  {
-    id: 0,
-    src: 'https://static.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg',
-    slug: 'kitten-looking',
-  },
-  {
-    id: 1,
-    src: 'https://static.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg',
-    slug: 'kitten-looking',
-  },
-  {
-    id: 2,
-    src: 'https://www.rd.com/wp-content/uploads/2021/04/GettyImages-138468381-scaled-e1619028416767.jpg',
-    slug: 'kitten-hugging',
-  },
-  {
-    id: 3,
-    src: 'https://www.rd.com/wp-content/uploads/2021/04/GettyImages-138468381-scaled-e1619028416767.jpg',
-    slug: 'kitten-hugging',
-  },
-  {
-    id: 4,
-    src: 'https://upload.wikimedia.org/wikipedia/commons/7/75/Cute_grey_kitten.jpg',
-    slug: 'kitten-staring',
-  },
-  {
-    id: 5,
-    src: 'https://upload.wikimedia.org/wikipedia/commons/7/75/Cute_grey_kitten.jpg',
-    slug: 'kitten-staring',
-  },
-];
+onMounted(async () => {
+  console.log('onMounted');
+  if (cards.value.length === 0) {
+    try {
+      const url =
+        'https://fed-team.modyo.cloud/api/content/spaces/animals/types/game/entries?per_page=20';
+      const res = await fetch(url);
+      const data = await res.json();
+      const dirtyCards = data.entries;
+      //clean cards
+      const cleanCards = dirtyCards.map((card) => {
+        return {
+          id: null,
+          slug: card.meta.slug,
+          src: card.fields.image.url,
+        };
+      });
+
+      //duplicate cards
+      const duplicatedCards = cleanCards.flatMap((card) => [card, { ...card }]);
+
+      //insert card id
+      for (let i = 0; i < duplicatedCards.length; i++) {
+        duplicatedCards[i].id = i;
+      }
+
+      //randomize cards
+      for (let i = duplicatedCards.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1)); // at random index
+        [duplicatedCards[i], duplicatedCards[j]] = [duplicatedCards[j], duplicatedCards[i]];
+      }
+
+      cards.value = duplicatedCards;
+      //
+    } catch (e) {
+      console.log(e);
+    }
+  }
+});
 
 function hanldeFlipped(data) {
   //if we click on a "won" card we do nothing
@@ -90,9 +108,17 @@ function hanldeFlipped(data) {
   }
 
   //check if the game ended with that card
-  if (wonCards.value.size >= cards.length / 2) {
+  if (wonCards.value.size >= cards.value.length / 2) {
     console.log('game ended');
   }
 }
 </script>
-<style scoped></style>
+<style scoped>
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  justify-content: space-between;
+}
+</style>
