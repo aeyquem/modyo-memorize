@@ -1,5 +1,4 @@
 <template>
-  <!-- <figure @click.prevent="flipCard(card)"> -->
   <figure>
     <img v-if="isFlipped" :src="card.src" :alt="card.slug" :title="card.slug" />
     <img v-else class="card__background" />
