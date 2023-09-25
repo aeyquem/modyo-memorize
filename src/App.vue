@@ -16,8 +16,11 @@
       <ScoreInfo :score="score" />
     </section>
   </main>
-  <Modal :visible="modalVisible">
+  <Modal :visible="!playerHasName">
     <UserInputModal @playerNamed="checkPlayerName" />
+  </Modal>
+  <Modal :visible="isGameWon">
+    <WonScreen :score="score" />
   </Modal>
 </template>
 
@@ -29,13 +32,15 @@ import ScoreInfo from './components/ScoreInfo/ScoreInfo.vue';
 import UserInputModal from './components/UserInputModal/UserInputModal.vue';
 import Modal from '@/components/Modal/Modal.vue';
 import { usePlayerStore } from '@/stores/player.store.js';
+import WonScreen from './components/WonScreen/WonScreen.vue';
 
 const player = usePlayerStore();
 
-const modalVisible = ref(false);
+const playerHasName = ref(false);
 
 const cards = ref([]);
 const wonCards = ref(new Set());
+const isGameWon = ref(false);
 const flipped = ref({
   slug: null,
   id: null,
@@ -89,9 +94,9 @@ onMounted(async () => {
 
 function checkPlayerName() {
   if (player.playerName) {
-    modalVisible.value = false;
+    playerHasName.value = true;
   } else {
-    modalVisible.value = true;
+    playerHasName.value = false;
   }
 }
 
@@ -150,6 +155,11 @@ function handleCardClicked(card) {
       };
       canClick.value = true;
     }, 500);
+  }
+
+  //check if we won the game
+  if (wonCards.value.size === cards.value.length / 2) {
+    isGameWon.value = true;
   }
 }
 
