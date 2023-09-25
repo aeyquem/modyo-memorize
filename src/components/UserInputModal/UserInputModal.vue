@@ -1,14 +1,16 @@
 <template>
-  <form>
+  <form @submit.prevent="submit">
     <label for="playerName">Your name: </label>
     <input
       id="playerName"
+      name="playerName"
       type="text"
       placeholder="Write your name please"
-      v-model.trim="inputName"
+      v-model.trim.lazy="inputName"
+      required
     />
     <br />
-    <input type="button" @click.prevent="handleClick" value="Continue to game" />
+    <input type="submit" id="btn_submit" name="btn_submit" value="Continue to game" />
   </form>
 </template>
 <script setup>
@@ -21,10 +23,7 @@ defineProps({
   visible: Boolean,
 });
 const emit = defineEmits(['playerNamed']);
-function handleClick() {
-  if (inputName.value.length < 0) {
-    return;
-  }
+function submit() {
   player.playerName = inputName.value;
   emit('playerNamed');
 }
