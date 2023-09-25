@@ -1,18 +1,31 @@
 <template>
   <form>
-    <label for="playerName">Your name:</label>
-    <input id="playerName" type="text" placeholder="Write your name please" />
+    <label for="playerName">Your name: </label>
+    <input
+      id="playerName"
+      type="text"
+      placeholder="Write your name please"
+      v-model.trim="inputName"
+    />
     <br />
     <input type="button" @click.prevent="handleClick" value="Continue to game" />
   </form>
 </template>
 <script setup>
+import { ref } from 'vue';
+import { usePlayerStore } from '@/stores/player.store';
+
+const player = usePlayerStore();
+const inputName = ref('');
 defineProps({
   visible: Boolean,
 });
 const emit = defineEmits(['playerNamed']);
 function handleClick() {
-  //validate name
+  if (inputName.value.length < 0) {
+    return;
+  }
+  player.playerName = inputName.value;
   emit('playerNamed');
 }
 </script>
