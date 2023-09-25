@@ -7,9 +7,21 @@ export default {
 };
 
 // More on writing stories with args: https://storybook.js.org/docs/vue/writing-stories/args
+export const Flipped = {
+  args: {
+    card: {
+      src: 'https://static.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg',
+      slug: 'kitten',
+    },
+    isFlipped: true,
+  },
+};
 export const Hidden = {
   args: {
-    src: 'https://static.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg',
-    slug: 'kitten',
+    card: {
+      src: 'https://static.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg',
+      slug: 'kitten',
+    },
+    isFlipped: false,
   },
 };
