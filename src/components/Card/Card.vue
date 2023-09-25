@@ -1,7 +1,7 @@
 <template>
   <figure @click.prevent="flipCard(card)">
     <img v-if="isFlipped" :src="card.src" :alt="card.slug" :title="card.slug" />
-    <img v-else src="https://opengameart.org/sites/default/files/card%20back%20red.png" />
+    <img v-else class="card__background" />
   </figure>
 </template>
 
