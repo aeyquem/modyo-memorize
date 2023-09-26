@@ -1,5 +1,14 @@
-import '@/assets/main.css';
 /** @type { import('@storybook/vue3').Preview } */
+import { setup } from '@storybook/vue3';
+import { createPinia } from 'pinia';
+
+import '@/assets/main.css';
+
+const pinia = createPinia();
+setup((app) => {
+  app.use(pinia);
+});
+
 const preview = {
   parameters: {
     actions: { argTypesRegex: '^on[A-Z].*' },
