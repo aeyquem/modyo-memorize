@@ -121,7 +121,9 @@ function handleCardClicked(card) {
     game.isGameWon = true;
   }
 }
-
+player.$subscribe((mutation, state) => {
+  localStorage.setItem('playerName', JSON.stringify(state.playerName));
+});
 checkPlayerName();
 </script>
 <style scoped>
