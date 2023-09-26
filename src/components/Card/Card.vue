@@ -25,26 +25,6 @@ img {
 }
 
 .card__background {
-  background: repeating-radial-gradient(
-      circle,
-      transparent,
-      transparent 17.5px,
-      #000000 17.5px,
-      #000000 22.5px
-    ),
-    repeating-radial-gradient(
-      circle,
-      transparent,
-      transparent 17.5px,
-      #000000 17.5px,
-      #000000 22.5px
-    ),
-    #000f78;
-  background-size: 100px 100px;
-  background-position:
-    0 0,
-    50px 50px,
-    100px 50px;
-  background-color: #000f78;
+  background-image: url('@/assets/card.webp');
 }
 </style>

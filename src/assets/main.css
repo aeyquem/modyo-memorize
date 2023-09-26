@@ -3,8 +3,5 @@
 @tailwind utilities;
 
 body {
-  background:
-    conic-gradient(from -45deg, #2c7c30 90deg, #0000 0 180deg, #277827 0 270deg, #0000 0) 0
-      calc(14px / 2) / 14px 14px,
-    conic-gradient(from 135deg at 50% 0, #2c7c30 90deg, #277827 0) 0 0 / calc(2 * 14px) 14px;
+  background-image: url('@/assets/background.png');
 }
