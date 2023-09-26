@@ -1,5 +1,5 @@
 <template>
-  <div class="score-board">
+  <div class="flex justify-evenly gap-6 px-8 py-4 bg-slate-100 rounded-t-lg text-2xl">
     <span>Right: {{ score.right }}</span>
     <span>|</span>
     <span>Wrong: {{ score.wrong }}</span>
@@ -13,13 +13,3 @@ defineProps({
   },
 });
 </script>
-<style scoped>
-.score-board {
-  display: flex;
-  justify-content: space-evenly;
-  gap: 24px;
-  border: 2px solid blue;
-  border-bottom: 0;
-  font-family: Arial, Helvetica, sans-serif;
-}
-</style>
