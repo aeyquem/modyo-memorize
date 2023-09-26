@@ -1,16 +1,10 @@
-# card-game
+# Modyo memorize
 
-This template should help get you started developing with Vue 3 in Vite.
-
-## Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+This is the game requested as a challenge by modyo
 
 ## Project Setup
+
+Make sure you have node v20.6 installed, then install the dependencies with
 
 ```sh
 npm install
@@ -22,14 +16,22 @@ npm install
 npm run dev
 ```
 
+you shold be able to load the project in your browser by going to the URL:
+
+```txt
+http://localhost:5173
+```
+
 ### Compile and Minify for Production
 
 ```sh
 npm run build
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+## Live version
 
-```sh
-npm run lint
+The live version of the proyect is hosted on:
+
+```txt
+https://modyo-memorize.netlify.app
 ```
