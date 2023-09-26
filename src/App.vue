@@ -73,7 +73,7 @@ function handleCardClicked(card) {
 
   //flip the card
   card.isFlipped = true;
-  //can, check if we have a flipped card
+  //check if we have a flipped card
   if (flipped.value.slug === null) {
     console.log('adding data');
     flipped.value = card;
