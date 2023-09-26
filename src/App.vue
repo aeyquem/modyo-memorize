@@ -5,7 +5,7 @@
     </section>
     <section class="flex justify-center flex-wrap gap-4 p-6">
       <Card
-        v-for="card in cards"
+        v-for="card in game.cards"
         :key="card.id"
         :isFlipped="card.isFlipped"
         :card="card"
@@ -13,14 +13,14 @@
       />
     </section>
     <section>
-      <ScoreInfo :score="score" />
+      <ScoreInfo :score="game.score" />
     </section>
   </main>
-  <Modal :visible="!playerHasName">
-    <UserInputModal @playerNamed="checkPlayerName" />
+  <Modal :visible="!player.playerName">
+    <UserInputModal />
   </Modal>
-  <Modal :visible="isGameWon">
-    <WonScreen :score="score" />
+  <Modal :visible="game.isGameWon">
+    <WonScreen />
   </Modal>
 </template>
 
@@ -31,65 +31,24 @@ import PlayerInfo from './components/PlayerInfo/PlayerInfo.vue';
 import ScoreInfo from './components/ScoreInfo/ScoreInfo.vue';
 import UserInputModal from './components/UserInputModal/UserInputModal.vue';
 import Modal from '@/components/Modal/Modal.vue';
-import { usePlayerStore } from '@/stores/player.store.js';
 import WonScreen from './components/WonScreen/WonScreen.vue';
+import { usePlayerStore } from '@/stores/player.store.js';
+import { useGameStore } from '@/stores/game.store.js';
 
 const player = usePlayerStore();
+const game = useGameStore();
 
 const playerHasName = ref(false);
 
-const cards = ref([]);
-const wonCards = ref(new Set());
-const isGameWon = ref(false);
 const flipped = ref({
   slug: null,
   id: null,
   isFlipped: null,
 });
-const score = ref({
-  right: 0,
-  wrong: 0,
-});
 const canClick = ref(true);
 
 onMounted(async () => {
-  console.log('onMounted');
-  if (cards.value.length === 0) {
-    try {
-      const url =
-        'https://fed-team.modyo.cloud/api/content/spaces/animals/types/game/entries?per_page=20';
-      const res = await fetch(url);
-      const data = await res.json();
-      const dirtyCards = data.entries;
-      //clean cards
-      const cleanCards = dirtyCards.map((card) => {
-        return {
-          id: null,
-          slug: card.meta.slug,
-          src: card.fields.image.url,
-        };
-      });
-
-      //duplicate cards
-      const duplicatedCards = cleanCards.flatMap((card) => [card, { ...card }]);
-
-      //insert card id and state
-      for (let i = 0; i < duplicatedCards.length; i++) {
-        duplicatedCards[i].id = i;
-        duplicatedCards[i].isFlipped = false;
-      }
-
-      //randomize cards
-      for (let i = duplicatedCards.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1)); // at random index
-        [duplicatedCards[i], duplicatedCards[j]] = [duplicatedCards[j], duplicatedCards[i]];
-      }
-
-      cards.value = duplicatedCards;
-    } catch (e) {
-      console.log(e);
-    }
-  }
+  game.fetchCards();
 });
 
 function checkPlayerName() {
@@ -102,7 +61,7 @@ function checkPlayerName() {
 
 function handleCardClicked(card) {
   //verify we can click a card
-  if (wonCards.value.has(card.slug)) {
+  if (game.wonCards.has(card.slug)) {
     return;
   }
 
@@ -132,19 +91,19 @@ function handleCardClicked(card) {
   //if we have a flipped card, check if the card is the same as the one flipped before
   if (flipped.value.slug === card.slug) {
     console.log('same card');
-    wonCards.value.add(card.slug);
+    game.wonCards.add(card.slug);
     flipped.value = {
       slug: null,
       id: null,
       isFlipped: false,
     };
-    score.value.right++;
+    game.score.right++;
     canClick.value = true;
   }
   //if not, reset the flipped card and the card we clicked
   else {
     console.log('wrong card');
-    score.value.wrong++;
+    game.score.wrong++;
     setTimeout(() => {
       card.isFlipped = false;
       flipped.value.isFlipped = false;
@@ -158,8 +117,8 @@ function handleCardClicked(card) {
   }
 
   //check if we won the game
-  if (wonCards.value.size === cards.value.length / 2) {
-    isGameWon.value = true;
+  if (game.wonCards.size === game.cards.length / 2) {
+    game.isGameWon = true;
   }
 }
 

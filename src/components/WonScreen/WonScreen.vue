@@ -2,16 +2,19 @@
   <div class="won__container">
     <p>Congrats!!</p>
     <h2>🥳🥳You won!!!🥳🥳</h2>
-    <p>It took you {{ score.wrong }} tries to get the {{ score.right }} cards right!</p>
+    <p>It took you {{ game.score.wrong }} tries to get the {{ game.score.right }} cards right!</p>
+    <br />
+    <button type="button" @click.prevent="resetGame">Play again!</button>
   </div>
 </template>
 <script setup>
-defineProps({
-  score: {
-    right: Number,
-    wrong: Number,
-  },
-});
+import { useGameStore } from '@/stores/game.store';
+
+const game = useGameStore();
+
+function resetGame() {
+  game.resetGame();
+}
 </script>
 <style scoped>
 h2 {

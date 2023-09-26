@@ -19,13 +19,9 @@ import { usePlayerStore } from '@/stores/player.store';
 
 const player = usePlayerStore();
 const inputName = ref('');
-defineProps({
-  visible: Boolean,
-});
-const emit = defineEmits(['playerNamed']);
+
 function submit() {
   player.playerName = inputName.value;
-  emit('playerNamed');
 }
 </script>
 
