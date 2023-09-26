@@ -23,5 +23,10 @@ defineProps({
   display: flex;
   justify-content: center;
   align-items: center;
+
+  backdrop-filter: blur(8px) saturate(103%);
+  -webkit-backdrop-filter: blur(8px) saturate(103%);
+  background-color: rgba(209, 209, 209, 0.66);
+  border: 1px solid rgba(209, 213, 219, 0.3);
 }
 </style>
