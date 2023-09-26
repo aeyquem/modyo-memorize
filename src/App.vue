@@ -113,7 +113,7 @@ function handleCardClicked(card) {
         isFlipped: null,
       };
       canClick.value = true;
-    }, 500);
+    }, 1000);
   }
 
   //check if we won the game
