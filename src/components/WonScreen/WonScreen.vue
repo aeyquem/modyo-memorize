@@ -1,6 +1,6 @@
 <template>
   <div class="won__container">
-    <p>Congrats!!</p>
+    <p>Congrats {{ player.playerName }}!!</p>
     <h2>🥳🥳You won!!!🥳🥳</h2>
     <p>It took you {{ game.score.wrong }} tries to get the {{ game.score.right }} cards right!</p>
     <br />
@@ -9,8 +9,10 @@
 </template>
 <script setup>
 import { useGameStore } from '@/stores/game.store';
+import { usePlayerStore } from '@/stores/player.store';
 
 const game = useGameStore();
+const player = usePlayerStore();
 
 function resetGame() {
   game.resetGame();
